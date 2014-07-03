@@ -12,6 +12,7 @@
 #include <fstream>
 #include <vector>
 
+#include <stb_image\stb_image.cpp>
 
 using namespace std;
 #define PI 3.14159
@@ -171,6 +172,29 @@ void createCircle(int nrVertices) {
 
 }
 
+// exemplu de implementare
+void FlipTexture(unsigned char* image_data,int x,int y , int n)
+{
+	//flip texture
+	int width_in_bytes = x * 4;
+	unsigned char *top = NULL;
+	unsigned char *bottom = NULL;
+	unsigned char temp = 0;
+	int half_height = y / 2;
+
+	for (int row = 0; row < half_height; row++) {
+		top = image_data + row * width_in_bytes;
+		bottom = image_data + (y - row - 1) * width_in_bytes;
+		for (int col = 0; col < width_in_bytes; col++) {
+			temp = *top;
+			*top = *bottom;
+			*bottom = temp;
+			top++;
+			bottom++;
+		}
+	}
+}
+
 
 int main () {
 
@@ -229,7 +253,7 @@ int main () {
 	delete[] fragment_shader;
 
 	// Creez alte shadere pentru a desena un triunghi de culoare diferita 
-	const char * vertex_shader2 = LoadFileInMemory("../data/vertexShader.glsl");
+	/*const char * vertex_shader2 = LoadFileInMemory("../data/vertexShader.glsl");
 	const char * fragment_shader2 = LoadFileInMemory("../data/fragmentShader2.glsl");
 
 	GLuint vs2 = glCreateShader(GL_VERTEX_SHADER);
@@ -246,6 +270,7 @@ int main () {
 	delete[] vertex_shader2;
 	delete[] fragment_shader2;
 
+	*/
 
 	/*
 	// Deseneaza obiecte pe ecran
@@ -256,7 +281,7 @@ int main () {
 	*/
 	
 
-	// cu indexBuffer
+	// desenez un patrat cu indexBuffer
 
     GLfloat vertices[] = {
         -0.5f,  0.5f, 0.0f,
@@ -283,6 +308,42 @@ int main () {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
 	
 	
+	// incarcare textura
+	int x, y, n;
+	int force_channels = 4;
+	char* player_file = "../textures/player.jpg";
+
+	GLuint tex;
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glActiveTexture(GL_TEXTURE0);
+
+	unsigned char* image_data = stbi_load(player_file, &x, &y, &n, force_channels);
+
+	if (!image_data) {
+		fprintf(stderr, "ERROR: could not load %s\n", player_file);
+	}
+
+	FlipTexture(image_data, x, y, n);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, x, y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+
+	// setam parametri de sampling	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE); //ce se intampla cand coordonata nu se inscrie in limite
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE); //ce se intampla cand coordonata nu se inscrie in limite
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // setam samplare cu interpolare liniara
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // setam samplare cu interpolare liniara
+	
+	delete [] image_data;
+
+	int texture_location = glGetUniformLocation(shader_programme, "basic_texture");
+
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glBindTexture(GL_TEXTURE_2D, tex);
+
+
+		
 	while (!glfwWindowShouldClose(window)) {
 	  
 		// stergem ce s-a desenat anterior
@@ -291,6 +352,8 @@ int main () {
 		glBufferData(GL_ARRAY_BUFFER, 12 * sizeof (float), vertices, GL_STATIC_DRAW);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
 		
+		glUniform1i(texture_location, 0); 
+	
 		glDrawElements(
 			GL_TRIANGLES,      // mode
 			6,    // count
