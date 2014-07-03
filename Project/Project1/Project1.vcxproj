@@ -11,12 +11,16 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Anul2 Sem II\scoala de vara\Ubisoft\Workshop2\stb_image\stb_image.cpp" />
     <ClCompile Include="SendMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\data\fragmentShader.glsl" />
     <None Include="..\data\fragmentShader2.glsl" />
     <None Include="..\data\vertexShader.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Anul2 Sem II\scoala de vara\Ubisoft\Workshop2\stb_image\stb_image.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{63AC2AC9-4451-40D1-B707-080EEB52F9E1}</ProjectGuid>

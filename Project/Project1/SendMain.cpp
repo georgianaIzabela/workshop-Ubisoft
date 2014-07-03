@@ -1,3 +1,8 @@
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
 #include <stdio.h>
@@ -6,6 +11,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+
+
 using namespace std;
 #define PI 3.14159
 
@@ -64,7 +71,7 @@ void createTriangle(float x, float y){
 	glBindVertexArray(vao);
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 9*sizeof(GLfloat), vertex_buff, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), vertex_buff, GL_STATIC_DRAW);
 	glVertexAttribPointer((GLuint)0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
 	glEnableVertexAttribArray(0);
 
@@ -167,7 +174,15 @@ void createCircle(int nrVertices) {
 
 int main () {
 
+	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
+
 	
+
+
+	//glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	//glDebugMessageCallback(openglDebugCallback , NULL);
+	//glEnable(GL_DEBUG_OUTPUT);
+
 
 	// Initializare (se creeaza contextul)
 	if (!glfwInit ()) {
@@ -232,19 +247,59 @@ int main () {
 	delete[] fragment_shader2;
 
 
+	/*
 	// Deseneaza obiecte pe ecran
 	createSquare(-0.75f, 0.25f);
 	createTriangle(-0.55f, -0.55f);
 	createTriangle(-0.05f, -0.05f);
-	
 	createCircle (9);
-  
+	*/
+	
+
+	// cu indexBuffer
+
+    GLfloat vertices[] = {
+        -0.5f,  0.5f, 0.0f,
+         0.5f,  0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f
+    };
+	
+	GLuint indices[] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+	GLuint vbo;
+    GLuint elementBuffer;
+	
+	glGenBuffers(1, &elementBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+    
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); 
+	
+	
 	while (!glfwWindowShouldClose(window)) {
 	  
 		// stergem ce s-a desenat anterior
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glUseProgram(shader_programme);
+		glBufferData(GL_ARRAY_BUFFER, 12 * sizeof (float), vertices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+		
+		glDrawElements(
+			GL_TRIANGLES,      // mode
+			6,    // count
+			GL_UNSIGNED_INT,   // type
+			(void*)0           // element array buffer offset
+			);
 	
-		// afisez obiectele
+		
+		/* // afisez obiectele
 		displayObject(objects[0], shader_programme);
 		displayObject(objects[1], shader_programme);
 		
@@ -252,6 +307,7 @@ int main () {
 		displayObject(objects[2], shader_programme2);
 		
 		displayObject(objects[3], shader_programme);
+		*/
 
 		// facem swap la buffere (Double buffer)
 		glfwSwapBuffers(window);
@@ -259,5 +315,7 @@ int main () {
 	}
   
 	glfwTerminate();
+	_CrtDumpMemoryLeaks();
+
 	return 0;
 }

@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Anul2 Sem II\scoala de vara\Ubisoft\Workshop2\stb_image\stb_image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="SendMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -29,5 +32,10 @@
     <None Include="..\data\fragmentShader2.glsl">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Anul2 Sem II\scoala de vara\Ubisoft\Workshop2\stb_image\stb_image.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
