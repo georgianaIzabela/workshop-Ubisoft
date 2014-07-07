@@ -11,7 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\include\stb_image\stb_image.cpp" />
     <ClCompile Include="SendMain.cpp" />
+    <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\data\fragmentShader.glsl" />
@@ -19,6 +23,11 @@
     <None Include="..\data\fragmentShader_modificat.glsl" />
     <None Include="..\data\vertexShader.glsl" />
     <None Include="..\data\vertexShader_modificat.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shader.h" />
+    <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{63AC2AC9-4451-40D1-B707-080EEB52F9E1}</ProjectGuid>
