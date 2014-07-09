@@ -9,7 +9,7 @@
 
 Sprite::Sprite(Vertex* vertices, unsigned int numVertices) {
 	static const unsigned int indices[] = {0, 1, 2,
-											2, 3, 0};
+											0, 2, 3};
 	m_numIndices = sizeof(indices) / sizeof(indices[0]);
 
 	glGenVertexArrays(1, &m_vertexArrayObject);
