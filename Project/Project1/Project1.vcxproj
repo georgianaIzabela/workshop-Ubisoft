@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\stb_image\stb_image.cpp" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="SendMain.cpp" />
     <ClCompile Include="Shader.cpp" />
@@ -26,6 +28,8 @@
     <None Include="..\data\vertexShader_modificat.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Sprite.h" />

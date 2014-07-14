@@ -7,6 +7,8 @@
 #include "Sprite.h"
 #include "Texture.h"
 #include "Window.h"
+#include "Player.h"
+#include "Enemy.h"
 
 #include <GL/glew.h> // include GLEW and new version of GL on Windows
 #include <GLFW/glfw3.h> // GLFW helper library
@@ -35,33 +37,44 @@ int main () {
 		Vertex(glm::vec3(-0.2, 0.2, 0), glm::vec2(1, 1))
 	};
 	
+	Vertex verts2[] = {
+		Vertex(glm::vec3(-0.5, 0.5, 0), glm::vec2(1, 1)),
+		Vertex(glm::vec3(-0.5, 0.5, 0), glm::vec2(1, 0)),
+		Vertex(glm::vec3(-0.5, -0.5, 0), glm::vec2(0, 0)),
+		Vertex(glm::vec3(0.5, 0.5, 0), glm::vec2(0, 1))
+	};
 	
 	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 
-	Shader sh("../data/Shader");
-	Sprite square(verts, sizeof(verts) / sizeof(verts[0]));
-	Texture tex("../textures/spaceship2.png");
-	Transform trans;
-
-	float counter = 0.0f;
+	Shader* sh = new Shader("../data/Shader");
+	Player* player = new Player(sh, 0.2f, "../textures/spaceship2.png");
+	Enemy* e1 = new Enemy(sh, 0.1f, 1, "../textures/");
+	Enemy* e2 = new Enemy(sh, 0.1f, 2, "../textures/");
 
 	while (m_window.IsRunning()) {
 		
 		m_window.Clear();
-		trans.GetPos().x = sin(counter);
 		
+		sh->Bind();
 		
-		sh.Bind();
-		tex.Bind();
-		sh.Update(trans);
-		square.Draw();
+		player->move(m_window.m_window);
+		player->draw();
 
-		counter += 0.01f;
+		e1->move();
+		e1->draw();
+
+		e2->move();
+		e2->draw();
 
 		m_window.Update();
 	}
   
+	delete sh;
+	delete player;
+	delete e1;
+	delete e2;
+
 	_CrtDumpMemoryLeaks();
 
 	return 0;

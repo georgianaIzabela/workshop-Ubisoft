@@ -14,10 +14,7 @@ public:
 	bool IsRunning();
 
 	virtual ~Window();
-protected:
-private:
-
-	GLFWwindow* m_window;
 	
+	GLFWwindow* m_window;
 };
 
